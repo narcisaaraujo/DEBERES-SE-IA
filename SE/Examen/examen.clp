@@ -1,74 +1,89 @@
 
+(defrule pregunta1
+(respuesta1 si)
+=>
+(assert (planta-crece-poco))
+)
+
+(defrule pregunta2
+(respuesta2 si)
+=>
+(assert (planta-amarillo-palido))
+)
+
+(defrule pregunta3
+(respuesta3 si)
+=>
+(assert (hojas-pardo-rojizo))
+)
+
+(defrule pregunta4
+(respuesta4 si)
+=>
+(assert (raiz-crece-poco))
+)
+
+(defrule pregunta5
+(respuesta5 si)
+=>
+(assert (planta-tallo-fusiforme))
+)
+
+(defrule pregunta6
+(respuesta6 si)
+=>
+(assert (planta-color-purpura))
+)
+
+(defrule pregunta7
+(respuesta7 si)
+=>
+(assert (planta-retraso-madurez))
+)
+
+(defrule pregunta8
+(respuesta8 si)
+=>
+(assert (bordes-hojas-chamuscados))
+)
+
+(defrule pregunta9
+(respuesta9 si)
+=>
+(assert (planta-tallos-debilitados))
+)
+
+(defrule pregunta10
+(respuesta10 si)
+=>
+(assert (frutas-semillas-marchitas))
+)
 
 (defrule nitrogeno-1
-(planta-crece-poco)
-=>
-(assert (deficiencia-nitrogeno))
-(printout t "La planta tiene deficiencia de nitrogeno" crlf))
+(or(planta-crece-poco)
+   (planta-amarillo-palido)
+   (hojas-pardo-rojizo))
 
-
-(defrule nitrogeno-2
-(planta-amarillo-palido)
 =>
-(assert (deficiencia-nitrogeno))
-(printout t "La planta tiene deficiencia de nitrogeno" crlf))
-
-(defrule nitrogeno-3
-(hojas-pardo-rojizo)
-=>
-(assert (deficiencia-nitrogeno))
-(printout t "La planta tiene deficiencia de nitrogeno" crlf))
+(assert(deficiencia-nitrogeno))
+(printout t "La planta tiene una deficiencia de nitrógeno." crlf)
+)
 
 (defrule fosforo-1
-(raiz-poco-crecimiento)
+(or(raiz-crece-poco)
+   (planta-tallo-fusiforme)
+   (planta-color-purpura)
+   (planta-retraso-madurez))
 =>
-(assert (deficiencia-fosforo))
-(printout t "La planta tiene deficiencia de fosforo" crlf)
+(assert(deficiencia-fosforo))
+(printout t "La planta tiene una deficiencia de fosforo." crlf)
 )
 
-(defrule fosforo-2
-(planta-tallo-fusiforme)
+(defrule potasio-1
+(or(bordes-hojas-chamuscados)
+   (planta-tallos-debilitados)
+   (frutas-semillas-marchitas))
 =>
-(assert (deficiencia-fosforo))
-(printout t "La planta tiene deficiencia de fosforo" crlf)
-)
-
-(defrule fosforo-3
-(planta-color-purpura)
-=>
-(assert (deficiencia-fosforo))
-(printout t "La planta tiene deficiencia de fosforo" crlf)
-)
-
-(defrule fosforo-4
-(retraso-madurez-planta)
-=>
-(assert (deficiencia-fosforo))
-(printout t "La planta tiene deficiencia de fosforo" crlf)
-)
-(defrule Potasio-1
-(bordes-hojas-chamuscadas)
-=>
-(assert (deficiencia-potasio))
-(printout t "La planta tiene deficiencia de potasio" crlf))
-
-(defrule Potasio-2
-(planta-tallos-debilitados)
-=>
-(assert (deficiencia-potasio))
-(printout t "La planta tiene deficiencia de potasio" crlf))
-
-
-(defrule Potasio-3
-(plantas-semillas-marchitas)
-(plantas-frutas-marchitas)
-=>
-(assert (deficiencia-potasio))
-(printout t "La planta tiene deficiencia de potasio" crlf))
-
-(deffacts hechos-iniciales
-(raiz-crece-poco)
-(planta-color-purpura)
-(planta-tallos-debilitados)
-
+(assert(deficiencia-potasio))
+(printout t "La planta tiene una deficiencia de Potasio." crlf)
 )
