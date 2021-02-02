@@ -1,0 +1,48 @@
+*****PruebaSE Algoritmo Knn
+
+***Lectura csv y almacenamiento en nodos
+LOAD CSV FROM "file:///C:/Users/narcisa/Documents/9no/deberes quisi/DEBERES-SE-IA/SE/PruebaKnn/cars.csv" as row
+CREATE (a:Auto)
+SET a.class = row[1],
+ a.features = row[2..];
+
+**Datos entrenamiento
+MATCH (a:Auto)
+WITH a LIMIT 143
+SET a:Training;
+
+******Datos prueba
+MATCH (a:Auto)
+WITH a SKIP 143
+SET a:Test;
+
+******Vector de CAracteriticas
+MATCH (a:Auto)
+UNWIND a.features as feature
+WITH a,collect(CASE feature
+WHEN a.features[1] THEN toInteger(a.features[1])
+WHEN a.features[2] THEN toInteger(a.features[2])
+WHEN a.features[3] THEN toInteger(a.features[3])
+WHEN a.features[4] THEN toInteger(a.features[4])
+WHEN a.features[5] THEN toInteger(a.features[5])
+WHEN a.features[6] THEN toInteger(a.features[6])
+WHEN a.features[7] THEN toInteger(a.features[7])
+WHEN a.features[8] THEN toInteger(a.features[8])
+WHEN a.features[9] THEN toInteger(a.features[9])
+
+END) as feature_vector
+SET a.feature_vector=feature_vector
+
+
+***Algoritmo eucladiano
+
+MATCH (test:Test)
+WITH test,test.feature_vector as feature_vector
+CALL apoc.cypher.run('MATCH (training:Training)
+WITH training,gds.alpha.similarity.euclideanDistance($feature_vector, training.feature_vector) AS similarity
+ORDER BY similarity ASC LIMIT 3
+RETURN collect(training.class) as classes',
+{feature_vector:feature_vector}) YIELD value
+WITH test.class as class, apoc.coll.sortMaps(apoc.coll.frequencies(value.classes), '^count')[-1].item as predicted_class
+WITH sum(CASE when class = predicted_class THEN 1 ELSE 0 END) as correct_predictions, count(*) as total_predictions
+RETURN correct_predictions,total_predictions, correct_predictions / toFloat(total_predictions) as ratio;
